@@ -3,15 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>RSTX - Roblox Securities Trading Exchange</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Login</h1>
-    <form id="login-form">
-        <label for="access-key">Access Key:</label>
-        <input type="password" id="access-key" name="access-key" required>
-        <button type="submit">Login</button>
-    </form>
+    <header class="hero">
+        <div class="container">
+            <h1>Roblox Securities Trading Exchange (RSTX)</h1>
+            <p>Your gateway to trading virtual stocks in the Roblox universe.</p>
+            <a href="#login" class="cta-button">Get Started</a>
+        </div>
+    </header>
+    <main>
+        <section class="about" id="about">
+            <div class="container">
+                <h2>About Us</h2>
+                <p>RSTX is a pioneering platform where Roblox enthusiasts can trade virtual stocks. Our mission is to provide a realistic stock trading experience within the Roblox ecosystem, allowing users to buy, sell, and manage virtual securities seamlessly.</p>
+            </div>
+        </section>
+        <section class="features" id="features">
+            <div class="container">
+                <h2>Features</h2>
+                <div class="feature">
+                    <h3>Real-time Trading</h3>
+                    <p>Experience the thrill of real-time trading with our advanced trading engine, ensuring fast and reliable transactions.</p>
+                </div>
+                <div class="feature">
+                    <h3>Market Analysis</h3>
+                    <p>Access comprehensive market data and analysis to make informed trading decisions.</p>
+                </div>
+                <div class="feature">
+                    <h3>Secure Platform</h3>
+                    <p>Trade with confidence on our secure platform, equipped with the latest security measures to protect your assets.</p>
+                </div>
+            </div>
+        </section>
+        <section class="login-section" id="login">
+            <div class="container">
+                <h2>Login</h2>
+                <form id="login-form">
+                    <label for="access-key">Access Key:</label>
+                    <input type="password" id="access-key" name="access-key" required>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 RSTX. All rights reserved.</p>
+        </div>
+    </footer>
     <script>
         document.getElementById('login-form').addEventListener('submit', async (event) => {
             event.preventDefault();
@@ -24,7 +66,7 @@
             const result = await response.json();
             if (result.success) {
                 sessionStorage.setItem('accessKey', accessKey);
-                window.location.href = '/form.html';
+                window.location.href = '/stocks.html';
             } else {
                 alert('Invalid Access Key');
             }

@@ -1,9 +1,8 @@
 [build]
-  publish = "public"
   functions = "functions"
+  publish = "public"
 
 [[redirects]]
-  from = "/form.html"
-  to = "/"
+  from = "/*"
+  to = "/index.html"
   status = 200
-  conditions = { query = { accessKey = ":accessKey" } }

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Stocks - RSTX</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Buy Stocks</h1>
+        </div>
+    </header>
+    <main>
+        <section class="form-section">
+            <div class="container">
+                <form id="stock-form">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                    
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                    
+                    <label for="stock">Select Stock:</label>
+                    <select id="stock" name="stock" required>
+                        <option value="stock1">Stock 1</option>
+                        <option value="stock2">Stock 2</option>
+                        <option value="stock3">Stock 3</option>
+                    </select>
+                    
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" required>
+
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </section>
+        <section class="stock-info">
+            <div class="container">
+                <h2>Stock Performance</h2>
+                <p><strong>Stock 1:</strong> Performance data and description of Stock 1.</p>
+                <p><strong>Stock 2:</strong> Performance data and description of Stock 2.</p>
+                <p><strong>Stock 3:</strong> Performance data and description of Stock 3.</p>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 RSTX. All rights reserved.</p>
+        </div>
+    </footer>
+    <script>
+        if (!sessionStorage.getItem('accessKey')) {
+            window.location.href = '/';
+        }
+
+        document.getElementById('stock-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const stock = document.getElementById('stock').value;
+            const quantity = document.getElementById('quantity').value;
+            const accessKey = sessionStorage.getItem('accessKey');
+            const response = await fetch('/.netlify/functions/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, stock, quantity, accessKey }),
+            });
+            const result = await response.json();
+            if (result.success) {
+                alert('Stock purchase submitted successfully');
+            } else {
+                alert('Submission failed');
+            }
+        });
+    </script>
+</body>
+</html>
