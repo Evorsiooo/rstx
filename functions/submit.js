@@ -1,8 +1,8 @@
 const fetch = require('node-fetch');
 
 exports.handler = async function(event, context) {
-    const { data, accessKey } = JSON.parse(event.body);
-    const validAccessKeys = ['key1', 'key2', 'key3'];  // make sure they matchs the keys in login.js
+    const { name, email, message, accessKey } = JSON.parse(event.body);
+    const validAccessKeys = ['key1', 'key2', 'key3'];  // make sure they match the keys in login.js
 
     if (!validAccessKeys.includes(accessKey)) {
         return {
@@ -13,11 +13,15 @@ exports.handler = async function(event, context) {
 
     const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
 
+    const payload = {
+        content: `**Name:** ${name}\n**Email:** ${email}\n**Message:** ${message}`,
+    };
+
     try {
         await fetch(webhookUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: data }),
+            body: JSON.stringify(payload),
         });
 
         return {
