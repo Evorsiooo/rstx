@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form id="login-form">
+        <label for="access-key">Access Key:</label>
+        <input type="password" id="access-key" name="access-key" required>
+        <button type="submit">Login</button>
+    </form>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const accessKey = document.getElementById('access-key').value;
+            const response = await fetch('/.netlify/functions/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ accessKey }),
+            });
+            const result = await response.json();
+            if (result.success) {
+                sessionStorage.setItem('accessKey', accessKey);
+                window.location.href = '/form.html';
+            } else {
+                alert('Invalid Access Key');
+            }
+        });
+    </script>
+</body>
+</html>
