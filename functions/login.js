@@ -1,6 +1,6 @@
 exports.handler = async function(event, context) {
     const { accessKey } = JSON.parse(event.body);
-    const validAccessKeys = ['key1', 'key2', 'key3'];  // Replace with your actual access keys
+    const validAccessKeys = ['key1', 'key2', 'key3'];
 
     if (validAccessKeys.includes(accessKey)) {
         return {
