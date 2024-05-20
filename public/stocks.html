@@ -46,7 +46,7 @@
                 </div>
             </div>
         </section>
-        <section class="add-stock-section" id="add-stock-section">
+        <section class="add-stock-section" id="add-stock-section" style="display: none;">
             <div class="container">
                 <h2>Add New Stock</h2>
                 <form id="add-stock-form">
@@ -137,7 +137,13 @@
             }
         });
 
-        window.addEventListener('load', loadStocks);
+        window.addEventListener('load', () => {
+            loadStocks();
+            const accessKey = sessionStorage.getItem('accessKey');
+            if (accessKey === 'key3') {
+                document.getElementById('add-stock-section').style.display = 'block';
+            }
+        });
     </script>
 </body>
 </html>

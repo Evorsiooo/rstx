@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const knex = require('knex')(require('../../knexfile').development);
 
 exports.handler = async function(event) {
     const { name, robloxUsername, discordUsername, stock, quantity, accessKey } = JSON.parse(event.body);

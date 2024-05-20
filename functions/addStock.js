@@ -1,5 +1,4 @@
-const fs = require('fs').promises;
-const path = require('path');
+const knex = require('knex')(require('../../knexfile').development);
 
 exports.handler = async function(event) {
     const { ticker, companyName, description, logo, accessKey } = JSON.parse(event.body);
@@ -11,24 +10,16 @@ exports.handler = async function(event) {
         };
     }
 
-    const newStock = { ticker, companyName, description, logo };
-
-    const filePath = path.join(__dirname, 'stocks.json');
-    let stocks = [];
-
     try {
-        const data = await fs.readFile(filePath, 'utf8');
-        stocks = JSON.parse(data);
+        await knex('stocks').insert({ ticker, companyName, description, logo });
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ success: true })
+        };
     } catch (err) {
-        if (err.code !== 'ENOENT') throw err; // Ignore if the file doesn't exist
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ success: false, message: 'Failed to add stock' })
+        };
     }
-
-    stocks.push(newStock);
-
-    await fs.writeFile(filePath, JSON.stringify(stocks, null, 2));
-
-    return {
-        statusCode: 200,
-        body: JSON.stringify({ success: true })
-    };
 };
