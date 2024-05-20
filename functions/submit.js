@@ -1,37 +1,33 @@
 const fetch = require('node-fetch');
 
-exports.handler = async function(event, context) {
-    const { name, email, stock, quantity, accessKey } = JSON.parse(event.body);
-    const validAccessKeys = ['key1', 'key2', 'key3'];  // needs to be the same as in login.js
+exports.handler = async function(event) {
+    const { name, robloxUsername, discordUsername, stock, quantity, accessKey } = JSON.parse(event.body);
 
-    if (!validAccessKeys.includes(accessKey)) {
+    // Validate access key and input data
+    if (!validateAccessKey(accessKey) || !name || !robloxUsername || !discordUsername || !stock || !quantity) {
         return {
-            statusCode: 401,
-            body: JSON.stringify({ success: false, message: 'Unauthorized' }),
+            statusCode: 400,
+            body: JSON.stringify({ success: false, message: 'Invalid input' })
         };
     }
 
+    // Send the stock purchase data to the Discord webhook
     const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+    const response = await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            content: `New stock purchase:\nName: ${name}\nRoblox Username: ${robloxUsername}\nDiscord Username: ${discordUsername}\nStock: ${stock}\nQuantity: ${quantity}`
+        })
+    });
 
-    const payload = {
-        content: `**Name:** ${name}\n**Email:** ${email}\n**Stock:** ${stock}\n**Quantity:** ${quantity}`,
+    return {
+        statusCode: 200,
+        body: JSON.stringify({ success: true })
     };
-
-    try {
-        await fetch(webhookUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-        });
-
-        return {
-            statusCode: 200,
-            body: JSON.stringify({ success: true }),
-        };
-    } catch (error) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ success: false, message: error.message }),
-        };
-    }
 };
+
+function validateAccessKey(key) {
+    const validKeys = ['key1', 'key2', 'key3']; // Add more keys as needed
+    return validKeys.includes(key);
+}

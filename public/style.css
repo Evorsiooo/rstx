@@ -1,5 +1,5 @@
 body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
@@ -45,11 +45,11 @@ header.hero .cta-button:hover {
     background-color: #f0f0f0;
 }
 
-.about, .features, .login-section, .form-section, .stock-info {
+.about, .features, .login-section, .form-section, .stock-info, .add-stock-section {
     margin: 40px 0;
 }
 
-.about h2, .features h2, .login-section h2, .stock-info h2 {
+.about h2, .features h2, .login-section h2, .stock-info h2, .add-stock-section h2 {
     color: #173760;
     font-size: 2em;
     margin-bottom: 20px;
@@ -64,7 +64,7 @@ label {
     margin: 10px 0 5px;
 }
 
-input[type="text"], input[type="email"], input[type="password"], input[type="number"], textarea, select {
+input[type="text"], input[type="url"], input[type="password"], input[type="number"], textarea, select {
     padding: 10px;
     width: 100%;
     border: 1px solid #ccc;

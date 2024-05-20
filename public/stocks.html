@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buy Stocks - RSTX</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,14 +20,15 @@
                     <label for="name">Name:</label>
                     <input type="text" id="name" name="name" required>
                     
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
+                    <label for="roblox-username">Roblox Username:</label>
+                    <input type="text" id="roblox-username" name="roblox-username" required>
+                    
+                    <label for="discord-username">Discord Username:</label>
+                    <input type="text" id="discord-username" name="discord-username" required>
                     
                     <label for="stock">Select Stock:</label>
                     <select id="stock" name="stock" required>
-                        <option value="stock1">Stock 1</option>
-                        <option value="stock2">Stock 2</option>
-                        <option value="stock3">Stock 3</option>
+                        <!-- Dynamic options -->
                     </select>
                     
                     <label for="quantity">Quantity:</label>
@@ -39,9 +41,29 @@
         <section class="stock-info">
             <div class="container">
                 <h2>Stock Performance</h2>
-                <p><strong>Stock 1:</strong> Performance data and description of Stock 1.</p>
-                <p><strong>Stock 2:</strong> Performance data and description of Stock 2.</p>
-                <p><strong>Stock 3:</strong> Performance data and description of Stock 3.</p>
+                <div id="stock-performance">
+                    <!-- Dynamic stock performance info -->
+                </div>
+            </div>
+        </section>
+        <section class="add-stock-section" id="add-stock-section">
+            <div class="container">
+                <h2>Add New Stock</h2>
+                <form id="add-stock-form">
+                    <label for="ticker">Stock Ticker:</label>
+                    <input type="text" id="ticker" name="ticker" required>
+                    
+                    <label for="company-name">Company Name:</label>
+                    <input type="text" id="company-name" name="company-name" required>
+                    
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" required></textarea>
+                    
+                    <label for="logo">Logo URL:</label>
+                    <input type="url" id="logo" name="logo" required>
+
+                    <button type="submit">Add Stock</button>
+                </form>
             </div>
         </section>
     </main>
@@ -58,14 +80,15 @@
         document.getElementById('stock-form').addEventListener('submit', async (event) => {
             event.preventDefault();
             const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
+            const robloxUsername = document.getElementById('roblox-username').value;
+            const discordUsername = document.getElementById('discord-username').value;
             const stock = document.getElementById('stock').value;
             const quantity = document.getElementById('quantity').value;
             const accessKey = sessionStorage.getItem('accessKey');
             const response = await fetch('/.netlify/functions/submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, stock, quantity, accessKey }),
+                body: JSON.stringify({ name, robloxUsername, discordUsername, stock, quantity, accessKey }),
             });
             const result = await response.json();
             if (result.success) {
@@ -74,6 +97,47 @@
                 alert('Submission failed');
             }
         });
+
+        async function loadStocks() {
+            const response = await fetch('/.netlify/functions/getStocks');
+            const stocks = await response.json();
+            const stockSelect = document.getElementById('stock');
+            const stockPerformance = document.getElementById('stock-performance');
+            
+            stocks.forEach(stock => {
+                const option = document.createElement('option');
+                option.value = stock.ticker;
+                option.textContent = `${stock.companyName} (${stock.ticker})`;
+                stockSelect.appendChild(option);
+                
+                const stockInfo = document.createElement('div');
+                stockInfo.innerHTML = `<strong>${stock.companyName} (${stock.ticker}):</strong> ${stock.description}`;
+                stockPerformance.appendChild(stockInfo);
+            });
+        }
+
+        document.getElementById('add-stock-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const ticker = document.getElementById('ticker').value;
+            const companyName = document.getElementById('company-name').value;
+            const description = document.getElementById('description').value;
+            const logo = document.getElementById('logo').value;
+            const accessKey = sessionStorage.getItem('accessKey');
+            const response = await fetch('/.netlify/functions/addStock', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ticker, companyName, description, logo, accessKey }),
+            });
+            const result = await response.json();
+            if (result.success) {
+                alert('Stock added successfully');
+                loadStocks();
+            } else {
+                alert('Failed to add stock');
+            }
+        });
+
+        window.addEventListener('load', loadStocks);
     </script>
 </body>
 </html>
